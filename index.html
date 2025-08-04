@@ -2,94 +2,128 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>CV Online - M. Taufik</title>
+  <title>CV M. Taufik</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     * {
       box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: Arial, sans-serif;
     }
 
     body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f5f5f5;
+    }
+
+    .wrapper {
       display: flex;
-      flex-direction: row;
       height: 100vh;
-      background-color: #f2f2f2;
+      overflow: hidden;
     }
 
     .sidebar {
-      width: 250px;
       background-color: #2c3e50;
       color: white;
-      padding: 20px;
-      transition: transform 0.3s ease;
-      z-index: 1000;
+      padding-top: 20px;
+      width: 250px;
+      transition: width 0.3s ease;
     }
 
-    .sidebar.hide {
-      transform: translateX(-100%);
+    .sidebar.collapsed {
+      width: 60px;
     }
 
     .sidebar h2 {
-      margin-bottom: 30px;
+      text-align: center;
+      margin: 0 0 20px;
+      font-size: 20px;
+      padding: 0 10px;
     }
 
-    .sidebar a {
+    .sidebar.collapsed h2 {
+      display: none;
+    }
+
+    .sidebar button {
       display: block;
-      padding: 10px;
-      margin-bottom: 10px;
-      text-decoration: none;
-      color: white;
-      background-color: #34495e;
-      border-radius: 5px;
-    }
-
-    .sidebar a:hover,
-    .sidebar a.active {
-      background-color: #1abc9c;
-    }
-
-    .toggle-btn {
-      position: fixed;
-      top: 15px;
-      left: 15px;
-      z-index: 1100;
-      background-color: rgba(0, 0, 0, 0.5);
-      color: white;
+      width: 100%;
+      padding: 12px;
+      background: none;
       border: none;
-      padding: 10px 14px;
-      border-radius: 6px;
+      color: white;
+      text-align: left;
+      font-size: 16px;
       cursor: pointer;
-      font-size: 18px;
     }
 
-    .content {
+    .sidebar button:hover {
+      background-color: #34495e;
+    }
+
+    .sidebar.collapsed button {
+      font-size: 0;
+      padding-left: 0;
+    }
+
+    .sidebar.collapsed button::before {
+      content: attr(data-short);
+      font-size: 16px;
+      padding-left: 18px;
+    }
+
+    .main {
       flex: 1;
       padding: 20px;
       overflow-y: auto;
     }
 
-    .section {
-      display: none;
+    .toggle-btn {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: transparent;
+      color: white;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      z-index: 10;
     }
 
-    .section.active {
-      display: block;
+    .header {
+      background-color: #ecf0f1;
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 5;
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: 24px;
+      margin-left: 50px;
+    }
+
+    .section {
+      margin-top: 30px;
+    }
+
+    .section h2 {
+      font-size: 22px;
+      margin-bottom: 10px;
+      border-bottom: 2px solid #1abc9c;
+      display: inline-block;
     }
 
     .doc-preview {
-      border: 1px solid #ccc;
-      padding: 15px;
-      background-color: white;
       text-align: center;
     }
 
     .doc-preview img {
       max-width: 100%;
       height: auto;
-      border: 1px solid #ddd;
+      border: 1px solid #ccc;
       margin-bottom: 15px;
     }
 
@@ -108,184 +142,115 @@
     }
 
     @media (max-width: 768px) {
-      body {
+      .wrapper {
         flex-direction: column;
       }
-
       .sidebar {
-        position: fixed;
-        height: 100%;
-        top: 0;
-        left: 0;
+        width: 100%;
       }
-
-      .content {
-        padding: 15px;
+      .sidebar.collapsed {
+        height: 60px;
+        width: 100%;
       }
-
+      .main {
+        padding: 10px;
+      }
       .toggle-btn {
-        top: 10px;
-        left: 10px;
+        left: 15px;
+        top: 15px;
       }
     }
   </style>
 </head>
 <body>
 
-  <button class="toggle-btn" onclick="toggleSidebar()" id="toggleBtn">→</button>
-
+<div class="wrapper">
   <div class="sidebar" id="sidebar">
     <h2>CV M. Taufik</h2>
-    <a href="#" class="tab-link active" data-target="biodata">BIODATA</a>
-    <a href="#" class="tab-link" data-target="skck">SKCK</a>
-    <a href="#" class="tab-link" data-target="ijazah">IJAZAH</a>
-    <a href="#" class="tab-link" data-target="ktp">FOTO KTP</a>
-    <a href="#" class="tab-link" data-target="kk">FOTO KK</a>
-    <a href="#" class="tab-link" data-target="akta">AKTA LAHIR</a>
-    <a href="#" class="tab-link" data-target="sertifikate">SERTIFIKAT</a>
+    <button data-short="B" onclick="showSection('biodata')">BIODATA</button>
+    <button data-short="S" onclick="showSection('skck')">SKCK</button>
+    <button data-short="I" onclick="showSection('ijazah')">IJAZAH</button>
+    <button data-short="K" onclick="showSection('ktp')">FOTO KTP</button>
+    <button data-short="KK" onclick="showSection('kk')">FOTO KK</button>
+    <button data-short="A" onclick="showSection('akta')">AKTA LAHIR</button>
+    <button data-short="SR" onclick="showSection('sertifikat')">SERTIFIKAT</button>
   </div>
 
-  <div class="content">
-    <div id="biodata" class="section active">
-      <h2 style="margin-bottom: 20px;">CURRICULUM VITAE</h2>
-      <div style="display: flex; flex-wrap: wrap; gap: 20px;">
-        <div style="flex: 2; min-width: 250px;">
-          <h3>DATA PRIBADI</h3>
-          <table style="width: 100%; line-height: 1.8;">
-            <tr><td>Nama</td><td>: Muhamad Taufik Kurahman</td></tr>
-            <tr><td>Tempat, Tanggal Lahir</td><td>: Siatele, 20-November-2006</td></tr>
-            <tr><td>Jenis Kelamin</td><td>: Laki-Laki</td></tr>
-            <tr><td>Agama</td><td>: Islam</td></tr>
-            <tr><td>Tinggi Badan</td><td>: 169 cm</td></tr>
-            <tr><td>Berat Badan</td><td>: 58 kg</td></tr>
-            <tr><td>Alamat</td><td>: Sari Putih</td></tr>
-            <tr><td>Handphone</td><td>: 0812-5084-4364</td></tr>
-            <tr><td>Status</td><td>: Belum Menikah</td></tr>
-            <tr><td>Email</td><td>: muhamadtaufikkurahman77@gmil.com</td></tr>
-          </table>
-        </div>
-        <div style="flex: 1; text-align: center;">
-          <img src="https://ik.imagekit.io/qdmpemhm2/Gambar%20WhatsApp%202025-08-04%20pukul%2016.26.36_c568e657.jpg?updatedAt=1754299676826" alt="Foto" style="width: 100%; max-width: 150px; border: 1px solid #ccc; padding: 5px;">
-        </div>
-      </div>
-
-      <hr style="margin: 30px 0;">
-      <h3>DATA PENDIDIKAN</h3>
-      <table style="width: 100%; line-height: 1.8;">
-        <tr><td>Sekolah Dasar</td><td>: SDN INPRES 1 Seram Utara Timur Kobi (2013 – 2019)</td></tr>
-        <tr><td>SMP</td><td>: SMPN 3 Seram Utara Timur Kobi (2019 – 2022)</td></tr>
-        <tr><td>SMA</td><td>: SMK TKM TEKNIK PURWOREJO (2022 – 2025)</td></tr>
-        <tr><td>Perguruan Tinggi</td><td>: -</td></tr>
-      </table>
-
-      <hr style="margin: 30px 0;">
-      <h3>KEMAMPUAN</h3>
-      <table style="width: 100%; line-height: 1.8;">
-        <tr><td>Engineer</td><td>: Mampu Beker Dengan Tim</td></tr>
-        <tr><td>Welder</td><td>: Basic Welder</td></tr>
-      </table>
-
-      <hr style="margin: 30px 0;">
-      <h3>PENGALAMAN</h3>
-      <p>Fresh Graduate</p>
+  <div class="main">
+    <div class="header">
+      <button class="toggle-btn" onclick="toggleSidebar()">➤</button>
+      <h1 id="section-title">BIODATA</h1>
     </div>
 
-    <!-- Dokumen Sections -->
-    <div id="skck" class="section">
+    <div id="biodata" class="section">
+      <h2>BIODATA</h2>
+      <p>Nama: M. Taufik Kurahman</p>
+      <p>Tempat/Tgl Lahir: ...</p>
+      <p>Alamat: ...</p>
+    </div>
+
+    <div id="skck" class="section" style="display: none;">
       <h2>SKCK</h2>
-      <div class="doc-preview">
-        <img src="skck.jpg" alt="SKCK">
-        <a href="skck.jpg" download class="download-btn">Unduh Gambar</a>
-      </div>
+      <p>Belum diunggah</p>
     </div>
 
-    <div id="ijazah" class="section">
+    <div id="ijazah" class="section" style="display: none;">
       <h2>IJAZAH</h2>
       <div class="doc-preview">
-        <img src="ijazah.jpg" alt="Ijazah">
-        <a href="ijazah.jpg" download class="download-btn">Unduh Gambar</a>
+        <img src="https://example.com/ijazah.jpg" alt="IJAZAH">
+        <br>
+        <a href="https://example.com/ijazah.jpg" download class="download-btn">Unduh Gambar</a>
       </div>
     </div>
 
-    <div id="ktp" class="section">
+    <div id="ktp" class="section" style="display: none;">
       <h2>KTP</h2>
       <div class="doc-preview">
-        <img src="ktpkk.jpg" alt="KTP">
-        <a href="ktpkk.jpg" download class="download-btn">Unduh Gambar</a>
+        <img src="https://example.com/ktp.jpg" alt="KTP">
+        <br>
+        <a href="https://example.com/ktp.jpg" download class="download-btn">Unduh Gambar</a>
       </div>
     </div>
 
-    <div id="kk" class="section">
+    <div id="kk" class="section" style="display: none;">
       <h2>KK</h2>
       <div class="doc-preview">
         <img src="https://ik.imagekit.io/qdmpemhm2/Gambar%20WhatsApp%202025-08-04%20pukul%2021.02.01_cdb1fd78.jpg?updatedAt=1754316674689" alt="KK">
+        <br>
         <a href="https://ik.imagekit.io/qdmpemhm2/Gambar%20WhatsApp%202025-08-04%20pukul%2021.02.01_cdb1fd78.jpg?updatedAt=1754316674689" download class="download-btn">Unduh Gambar</a>
       </div>
     </div>
 
-    <div id="akta" class="section">
+    <div id="akta" class="section" style="display: none;">
       <h2>AKTA LAHIR</h2>
-      <div class="doc-preview">
-        <img src="https://ik.imagekit.io/qdmpemhm2/Gambar%20WhatsApp%202025-08-04%20pukul%2021.02.01_e42695f1.jpg?updatedAt=1754316304532" alt="Akta Lahir">
-        <a href="https://ik.imagekit.io/qdmpemhm2/Gambar%20WhatsApp%202025-08-04%20pukul%2021.02.01_e42695f1.jpg?updatedAt=1754316304532" download class="download-btn">Unduh Gambar</a>
-      </div>
+      <p>Belum diunggah</p>
     </div>
 
-    <div id="sertifikate" class="section">
+    <div id="sertifikat" class="section" style="display: none;">
       <h2>SERTIFIKAT</h2>
       <div class="doc-preview">
-        <img src="https://ik.imagekit.io/qdmpemhm2/Gambar%20WhatsApp%202025-08-04%20pukul%2021.02.01_88c3694a.jpg?updatedAt=1754316304516" alt="Sertifikat">
-        <a href="https://ik.imagekit.io/qdmpemhm2/Gambar%20WhatsApp%202025-08-04%20pukul%2021.02.01_88c3694a.jpg?updatedAt=1754316304516" download class="download-btn">Unduh Gambar</a>
+        <img src="https://example.com/sertifikat.jpg" alt="SERTIFIKAT">
+        <br>
+        <a href="https://example.com/sertifikat.jpg" download class="download-btn">Unduh Gambar</a>
       </div>
     </div>
+
   </div>
+</div>
 
-  <script>
-    <script>
-  const sidebar = document.getElementById('sidebar');
-  const toggleBtn = document.querySelector('.toggle-btn');
-  const menuLinks = document.querySelectorAll('.menu-link');
+<script>
+  function toggleSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    sidebar.classList.toggle('collapsed');
+  }
 
-  // Toggle sidebar
-  toggleBtn.addEventListener('click', () => {
-    sidebar.classList.toggle('active');
-  });
-
-  // Auto-close after click
-  menuLinks.forEach(link => {
-    link.addEventListener('click', () => {
-      sidebar.classList.remove('active');
-    });
-  });
+  function showSection(id) {
+    const sections = document.querySelectorAll('.section');
+    sections.forEach(sec => sec.style.display = 'none');
+    document.getElementById(id).style.display = 'block';
+    document.getElementById("section-title").textContent = id.toUpperCase().replace('_', ' ');
+  }
 </script>
 
-    const links = document.querySelectorAll('.tab-link');
-    const sections = document.querySelectorAll('.section');
-    const sidebar = document.getElementById('sidebar');
-    const toggleBtn = document.getElementById('toggleBtn');
-
-    links.forEach(link => {
-      link.addEventListener('click', (e) => {
-        e.preventDefault();
-        links.forEach(l => l.classList.remove('active'));
-        link.classList.add('active');
-        const target = link.dataset.target;
-        sections.forEach(section => {
-          section.classList.remove('active');
-          if (section.id === target) {
-            section.classList.add('active');
-          }
-        });
-      });
-    });
-
-    function toggleSidebar() {
-      sidebar.classList.toggle('hide');
-      toggleBtn.textContent = sidebar.classList.contains('hide') ? '→' : '←';
-    }
-  </script>
 </body>
 </html>
-
-
-
