@@ -241,6 +241,24 @@
   </div>
 
   <script>
+    <script>
+  const sidebar = document.getElementById('sidebar');
+  const toggleBtn = document.querySelector('.toggle-btn');
+  const menuLinks = document.querySelectorAll('.menu-link');
+
+  // Toggle sidebar
+  toggleBtn.addEventListener('click', () => {
+    sidebar.classList.toggle('active');
+  });
+
+  // Auto-close after click
+  menuLinks.forEach(link => {
+    link.addEventListener('click', () => {
+      sidebar.classList.remove('active');
+    });
+  });
+</script>
+
     const links = document.querySelectorAll('.tab-link');
     const sections = document.querySelectorAll('.section');
     const sidebar = document.getElementById('sidebar');
@@ -268,5 +286,6 @@
   </script>
 </body>
 </html>
+
 
 
