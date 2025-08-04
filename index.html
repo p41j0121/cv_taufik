@@ -2,251 +2,194 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>CV Online - M. Taufik</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CV M. Taufik</title>
   <style>
     * {
       box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: Arial, sans-serif;
     }
-
     body {
+      margin: 0;
+      font-family: sans-serif;
       display: flex;
       height: 100vh;
-      background-color: #f2f2f2;
+      overflow: hidden;
     }
 
+    /* Sidebar */
     .sidebar {
-      width: 250px;
-      background-color: #2c3e50;
+      background-color: #1f2d3d;
       color: white;
-      padding: 20px;
-      transition: transform 0.3s ease;
-      z-index: 1000;
+      width: 260px;
+      transition: width 0.3s;
+      display: flex;
+      flex-direction: column;
     }
-
-    .sidebar.hide {
-      transform: translateX(-100%);
-    }
-
     .sidebar h2 {
-      margin-bottom: 30px;
+      margin: 0;
+      padding: 20px;
+      font-size: 22px;
+      background-color: #1f2d3d;
+    }
+    .sidebar button {
+      padding: 15px;
+      text-align: left;
+      background: none;
+      border: none;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      width: 100%;
+      border-bottom: 1px solid #334;
+    }
+    .sidebar button.active {
+      background-color: #17c2aa;
+      color: black;
     }
 
-    .sidebar a {
-      display: block;
+    /* Toggle button */
+    .toggle-btn {
+      position: absolute;
+      left: 260px;
+      top: 10px;
+      z-index: 10;
+      background-color: #17c2aa;
+      border: none;
       padding: 10px;
-      margin-bottom: 10px;
-      text-decoration: none;
-      color: white;
-      background-color: #34495e;
+      cursor: pointer;
+      font-size: 20px;
+      border-radius: 0 5px 5px 0;
+    }
+    .sidebar.collapsed {
+      width: 0;
+      overflow: hidden;
+    }
+    .toggle-btn.collapsed {
+      left: 0;
       border-radius: 5px;
     }
 
-    .sidebar a:hover,
-    .sidebar a.active {
-      background-color: #1abc9c;
-    }
-
-    .toggle-btn {
-      position: fixed;
-      top: 15px;
-      left: 15px;
-      z-index: 1100;
-      background-color: #1abc9c;
-      color: white;
-      border: none;
-      padding: 10px 14px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 18px;
-    }
-
+    /* Content */
     .content {
       flex: 1;
-      padding: 30px;
-      overflow-y: auto;
-      transition: margin-left 0.3s ease;
+      padding: 10px;
+      overflow: auto;
+      background: #f4f4f4;
     }
 
-    .section {
-      display: none;
+    .content h1 {
+      font-size: 24px;
+      margin-top: 0;
     }
 
-    .section.active {
-      display: block;
-    }
-
-    .doc-preview {
-      border: 1px solid #ccc;
-      padding: 15px;
-      background-color: white;
-      text-align: center;
-    }
-
-    .doc-preview img {
+    .content img {
       max-width: 100%;
       height: auto;
-      border: 1px solid #ddd;
-      margin-bottom: 15px;
+      display: block;
+      margin: auto;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
     }
 
     .download-btn {
       display: inline-block;
-      padding: 10px 20px;
-      background-color: #1abc9c;
+      margin: 10px auto;
+      background-color: #17c2aa;
       color: white;
+      padding: 10px 20px;
       text-decoration: none;
-      border-radius: 6px;
       font-weight: bold;
+      border-radius: 5px;
+      text-align: center;
     }
 
-    .download-btn:hover {
-      background-color: #16a085;
+    @media (max-width: 768px) {
+      .toggle-btn {
+        top: 5px;
+      }
+      .content h1 {
+        font-size: 20px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .sidebar h2 {
+        font-size: 18px;
+      }
+      .sidebar button {
+        font-size: 14px;
+      }
     }
   </style>
 </head>
 <body>
-
-  <button class="toggle-btn" onclick="toggleSidebar()" id="toggleBtn">→</button>
-
   <div class="sidebar" id="sidebar">
     <h2>CV M. Taufik</h2>
-    <a href="#" class="tab-link active" data-target="biodata">BIODATA</a>
-    <a href="#" class="tab-link" data-target="skck">SKCK</a>
-    <a href="#" class="tab-link" data-target="ijazah">IJAZAH</a>
-    <a href="#" class="tab-link" data-target="ktp">FOTO KTP</a>
-    <a href="#" class="tab-link" data-target="kk">FOTO KK</a>
-    <a href="#" class="tab-link" data-target="akta">AKTA LAHIR</a>
-    <a href="#" class="tab-link" data-target="sertifikate">SERTIFIKAT</a>
+    <button onclick="showTab('biodata')">BIODATA</button>
+    <button onclick="showTab('skck')">SKCK</button>
+    <button onclick="showTab('ijazah')">IJAZAH</button>
+    <button onclick="showTab('ktp')">FOTO KTP</button>
+    <button onclick="showTab('kk')">FOTO KK</button>
+    <button onclick="showTab('akta')">AKTA LAHIR</button>
+    <button onclick="showTab('sertifikat')">SERTIFIKAT</button>
   </div>
 
-  <div class="content">
-    <div id="biodata" class="section active">
-      <h2 style="margin-bottom: 20px;">CURRICULUM VITAE</h2>
-      <div style="display: flex; gap: 30px;">
-        <div style="flex: 2;">
-          <h3>DATA PRIBADI</h3>
-          <table style="width: 100%; line-height: 1.8;">
-            <tr><td>Nama</td><td>: Muhamad Taufik Kurahman</td></tr>
-            <tr><td>Tempat, Tanggal Lahir</td><td>: Siatele, 20-November-2006</td></tr>
-            <tr><td>Jenis Kelamin</td><td>: Laki-Laki</td></tr>
-            <tr><td>Agama</td><td>: Islam</td></tr>
-            <tr><td>Tinggi Badan</td><td>: 169 cm</td></tr>
-            <tr><td>Berat Badan</td><td>: 58 kg</td></tr>
-            <tr><td>Alamat</td><td>: Sari Putih</td></tr>
-            <tr><td>Handphone</td><td>: 0812-5084-4364</td></tr>
-            <tr><td>Status</td><td>: Belum Menikah</td></tr>
-            <tr><td>Email</td><td>: muhamadtaufikkurahman77@gmil.com</td></tr>
-          </table>
-        </div>
-        <div style="flex: 1;">
-          <img src="https://ik.imagekit.io/qdmpemhm2/Gambar%20WhatsApp%202025-08-04%20pukul%2016.26.36_c568e657.jpg?updatedAt=1754299676826" alt="Foto" style="width: 100%; max-width: 150px; border: 1px solid #ccc; padding: 5px;">
-        </div>
-      </div>
+  <button class="toggle-btn" id="toggleBtn" onclick="toggleSidebar()">❯</button>
 
-      <hr style="margin: 30px 0;">
-      <h3>DATA PENDIDIKAN</h3>
-      <table style="width: 100%; line-height: 1.8;">
-        <tr><td>Sekolah Dasar</td><td>: SDN INPRES 1 Seram Utara Timur Kobi (2013 – 2019)</td></tr>
-        <tr><td>SMP</td><td>: SMPN 3 Seram Utara Timur Kobi (2019 – 2022)</td></tr>
-        <tr><td>SMA</td><td>: SMK TKM TEKNIK PURWOREJO (2022 – 2025)</td></tr>
-        <tr><td>Perguruan Tinggi</td><td>: -</td></tr>
-      </table>
-
-      <hr style="margin: 30px 0;">
-      <h3>KEMAMPUAN</h3>
-      <table style="width: 100%; line-height: 1.8;">
-        <tr><td>Engineer</td><td>: Mampu Beker Dengan Tim</td></tr>
-        <tr><td>Welder</td><td>: Basic Welder</td></tr>
-      </table>
-
-      <hr style="margin: 30px 0;">
-      <h3>PENGALAMAN</h3>
-      <p>Fresh Graduate</p>
-    </div>
-
-    <!-- Dokumen Sections -->
-    <div id="skck" class="section">
-      <h2>SKCK</h2>
-      <div class="doc-preview">
-        <img src="skck.jpg" alt="SKCK">
-        <a href="skck.jpg" download class="download-btn">Unduh Gambar</a>
-      </div>
-    </div>
-
-    <div id="ijazah" class="section">
-      <h2>IJAZAH</h2>
-      <div class="doc-preview">
-        <img src="ijazah.jpg" alt="Ijazah">
-        <a href="ijazah.jpg" download class="download-btn">Unduh Gambar</a>
-      </div>
-    </div>
-
-    <div id="ktp" class="section">
-      <h2>KTP</h2>
-      <div class="doc-preview">
-        <img src="ktpkk.jpg" alt="KTP">
-        <a href="ktpkk.jpg" download class="download-btn">Unduh Gambar</a>
-      </div>
-    </div>
-
-    <div id="kk" class="section">
-      <h2>KK</h2>
-      <div class="doc-preview">
-        <img src="https://ik.imagekit.io/qdmpemhm2/Gambar%20WhatsApp%202025-08-04%20pukul%2021.02.01_cdb1fd78.jpg?updatedAt=1754316674689" alt="KK">
-        <a href="https://ik.imagekit.io/qdmpemhm2/Gambar%20WhatsApp%202025-08-04%20pukul%2021.02.01_cdb1fd78.jpg?updatedAt=1754316674689" download class="download-btn">Unduh Gambar</a>
-      </div>
-    </div>
-
-    <div id="akta" class="section">
-      <h2>AKTA LAHIR</h2>
-      <div class="doc-preview">
-        <img src="https://ik.imagekit.io/qdmpemhm2/Gambar%20WhatsApp%202025-08-04%20pukul%2021.02.01_e42695f1.jpg?updatedAt=1754316304532" alt="Akta Lahir">
-        <a href="https://ik.imagekit.io/qdmpemhm2/Gambar%20WhatsApp%202025-08-04%20pukul%2021.02.01_e42695f1.jpg?updatedAt=1754316304532" download class="download-btn">Unduh Gambar</a>
-      </div>
-    </div>
-
-    <div id="sertifikate" class="section">
-      <h2>SERTIFIKAT</h2>
-      <div class="doc-preview">
-        <img src="https://ik.imagekit.io/qdmpemhm2/Gambar%20WhatsApp%202025-08-04%20pukul%2021.02.01_88c3694a.jpg?updatedAt=1754316304516" alt="Sertifikat">
-        <a href="https://ik.imagekit.io/qdmpemhm2/Gambar%20WhatsApp%202025-08-04%20pukul%2021.02.01_88c3694a.jpg?updatedAt=1754316304516" download class="download-btn">Unduh Gambar</a>
-      </div>
-    </div>
+  <div class="content" id="content">
+    <h1>Selamat datang!</h1>
+    <p>Silakan pilih salah satu tab di kiri.</p>
   </div>
 
   <script>
-    const links = document.querySelectorAll('.tab-link');
-    const sections = document.querySelectorAll('.section');
-    const sidebar = document.getElementById('sidebar');
-    const toggleBtn = document.getElementById('toggleBtn');
+    const content = document.getElementById("content");
 
-    // Tab switching
-    links.forEach(link => {
-      link.addEventListener('click', (e) => {
-        e.preventDefault();
+    function showTab(tab) {
+      const sidebarButtons = document.querySelectorAll(".sidebar button");
+      sidebarButtons.forEach(btn => btn.classList.remove("active"));
+      event.target.classList.add("active");
 
-        links.forEach(l => l.classList.remove('active'));
-        link.classList.add('active');
+      let imagePath = "";
+      let fileName = "";
+      switch (tab) {
+        case "ktp":
+          imagePath = "Cuplikan layar 2025-08-04 211504.png";
+          fileName = "Foto_KTP.png";
+          break;
+        case "kk":
+          imagePath = "Cuplikan layar 2025-08-04 211504.png";
+          fileName = "Foto_KK.png";
+          break;
+        case "ijazah":
+          imagePath = "Cuplikan layar 2025-08-04 213903.png";
+          fileName = "Ijazah.png";
+          break;
+        case "sertifikat":
+          imagePath = "Cuplikan layar 2025-08-04 213903.png";
+          fileName = "Sertifikat.png";
+          break;
+        default:
+          imagePath = "";
+          break;
+      }
 
-        const target = link.dataset.target;
+      if (imagePath) {
+        content.innerHTML = `
+          <h1>${tab.toUpperCase()}</h1>
+          <img src="${imagePath}" alt="${tab}" />
+          <a class="download-btn" href="${imagePath}" download="${fileName}">⬇️ Unduh Gambar</a>
+        `;
+      } else {
+        content.innerHTML = `<h1>${tab.toUpperCase()}</h1><p>Konten belum tersedia.</p>`;
+      }
+    }
 
-        sections.forEach(section => {
-          section.classList.remove('active');
-          if (section.id === target) {
-            section.classList.add('active');
-          }
-        });
-      });
-    });
-
-    // Sidebar toggle
     function toggleSidebar() {
-      sidebar.classList.toggle('hide');
-      toggleBtn.textContent = sidebar.classList.contains('hide') ? '→' : '←';
+      const sidebar = document.getElementById("sidebar");
+      const toggleBtn = document.getElementById("toggleBtn");
+      sidebar.classList.toggle("collapsed");
+      toggleBtn.classList.toggle("collapsed");
+      toggleBtn.textContent = sidebar.classList.contains("collapsed") ? "❮" : "❯";
     }
   </script>
 </body>
